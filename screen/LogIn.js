@@ -1,4 +1,4 @@
-import react from "react";
+import React,{useState} from "react";
 import {
   View,
   StyleSheet,
@@ -6,17 +6,29 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import UserInput from "../components/Input";
 import Logo from "../components/logo";
 
 const LogIn = ({ navigation }) => {
+  const [hidePass, setHidePass] = useState(true);
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const showPassword = () => {
+    setHidePass(hidePass ? false : true);
+  }
   return (
     <KeyboardAwareScrollView contentContainerStyle={styles.container}>  
       <Logo name="Log in" />
-      <UserInput name="Email"/>
-      <UserInput name="Password" password="true"/>
+      <UserInput name="Email" value={email} setValue={setEmail}/>
+      <UserInput name="Password" secureTextEntry={hidePass?true:false} value={password}  setValue={setPassword}/>
+      <View style={styles.logoInput}>
+        <TouchableOpacity onPress={() => showPassword()}>
+        <Text>{hidePass?"Show":"Hide"}</Text>
+        </TouchableOpacity>
+      </View>
       <TouchableOpacity style={styles.submit}>
         <Text>Submit</Text>
       </TouchableOpacity>
@@ -29,7 +41,12 @@ const LogIn = ({ navigation }) => {
           Sign Up
         </Text>
       </Text>
-      <Text style={{ marginTop: 10, color: "red" }}>Forget Password</Text>
+      <TouchableOpacity onPress={()=>Alert.alert(
+        "Forgot password?",
+        'You should relax and try to remember your password',
+      )}>
+       <Text style={{ marginTop: 10, color: "red" }}>Forget Password</Text>
+      </TouchableOpacity>
     </KeyboardAwareScrollView>
   );
 };
@@ -49,5 +66,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
   },
+  logoInput: {
+    position: "relative",
+    top: -45,
+    right: -130,
+  }
 });
 export default LogIn;
